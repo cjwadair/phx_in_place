@@ -1,0 +1,8 @@
+{
+  "name": "phx_in_place",
+  "version": "0.1.1",
+  "main": "./priv/pip.js",
+  "repository": {
+  },
+  "files": ["README.md", "package.json", "priv/pip.js"]
+}

@@ -1,8 +1,24 @@
 {
   "name": "phx_in_place",
-  "version": "0.1.1",
-  "main": "./priv/pip.js",
-  "repository": {
+  "version": "0.1.0",
+  "main": "./priv/assets/app.js",
+  "repository": {},
+  "devDependencies": {
+    "babel-cli": "6.26.0",
+    "babel-preset-env": "1.6.1",
+    "watch": "1.0.2"
   },
-  "files": ["README.md", "package.json", "priv/pip.js"]
+  "files": [
+    "README.md",
+    "package.json",
+    "priv/assets/app.js"
+  ],
+  "scripts": {
+    "watch:lib": "watch 'npm run build' lib",
+    "watch:assets": "watch 'npm run build' assets",
+    "watch": "npm run watch:lib & npm run watch:assets",
+    "build": "babel ./assets/app.js --out-file ./priv/assets/app.js --presets=env"
+  },
+  "dependencies": {
+  }
 }

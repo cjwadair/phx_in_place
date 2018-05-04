@@ -8,7 +8,7 @@ defmodule PhxInPlaceTest do
 
   test "input tag correctly generated when no options provided" do
     query_result = Phoenix.HTML.safe_to_string(PhxInPlace.phx_in_place(%SandboxProduct{}, :input_quote))
-    expected_result = "<input class=\"pip-input\" data-struct=\"Elixir.PhxInPlaceTest.SandboxProduct\" id=\"1855\" name=\"input_quote\" value=\"223.45\"></input>"
+    expected_result = "<input class=\"pip-input\" hash=\"fAket0kn\" name=\"input_quote\" value=\"223.45\"></input>"
 
     assert query_result == expected_result
   end
@@ -22,9 +22,8 @@ defmodule PhxInPlaceTest do
   test "input tag generated when allowable tag type provided" do
     query_result = Phoenix.HTML.safe_to_string(PhxInPlace.phx_in_place(%SandboxProduct{}, :name, type: :textarea))
 
-    expected_result = "<textarea class=\"pip-input\" data-struct=\"Elixir.PhxInPlaceTest.SandboxProduct\" id=\"1855\" name=\"name\" value=\"Test 1-54\"></textarea>"
+    expected_result = "<textarea class=\"pip-input\" hash=\"fAket0kn\" name=\"name\" value=\"Test 1-54\"></textarea>"
 
-    # assert String.contains?(query_result, "<input>")
     assert query_result == expected_result
   end
 
@@ -39,16 +38,10 @@ defmodule PhxInPlaceTest do
     assert {:error, "Invalid or Missing Data Source"} = query_result
   end
 
-  test "returns error if source does not contain __struct__ field" do
-    map = %{name: "1", id: "2"}
+  test "returns error if source is not a valid struct object" do
+    map = %{id: "33", name: "TEST"}
     query_result = PhxInPlace.phx_in_place(map, :name)
-    assert {:error, ":__struct__ not found in the source data provided"} = query_result
-  end
-
-  test "returns error if source does not contain id field" do
-    map = %{name: "1", __struct__: "2"}
-    query_result = PhxInPlace.phx_in_place(map, :name)
-    assert {:error, ":id not found in the source data provided"} = query_result
+    assert {:error, "Source is not a valid struct object"} = query_result
   end
 
   test "returns error when field name missing" do
@@ -74,42 +67,38 @@ defmodule PhxInPlaceTest do
   test "formats data correctly when display_as set to number_to_currency" do
     query_result = Phoenix.HTML.safe_to_string(PhxInPlace.phx_in_place(%SandboxProduct{}, :input_quote, display_as: :number_to_currency))
 
-    expected_result = "<input class=\"pip-input\" data-struct=\"Elixir.PhxInPlaceTest.SandboxProduct\" id=\"1855\" name=\"input_quote\" value=\"$ 223.45\"></input>"
+    expected_result = "<input class=\"pip-input\" hash=\"fAket0kn\" name=\"input_quote\" value=\"$ 223.45\"></input>"
 
-    # assert String.contains?(query_result, "<input>")
     assert query_result == expected_result
   end
 
   test "display_as formatted correctly when helper options provided" do
     query_result = Phoenix.HTML.safe_to_string(PhxInPlace.phx_in_place(%SandboxProduct{}, :input_quote, display_as: :number_to_currency, display_options: [precision: 5, unit: "£"]))
 
-    expected_result = "<input class=\"pip-input\" data-struct=\"Elixir.PhxInPlaceTest.SandboxProduct\" id=\"1855\" name=\"input_quote\" value=\"£ 223.45000\"></input>"
+    expected_result = "<input class=\"pip-input\" hash=\"fAket0kn\" name=\"input_quote\" value=\"£ 223.45000\"></input>"
 
-    # assert String.contains?(query_result, "<input>")
     assert query_result == expected_result
   end
 
   test "formats data correctly when display_as set to number_to_percentage" do
     query_result = Phoenix.HTML.safe_to_string(PhxInPlace.phx_in_place(%SandboxProduct{}, :markup, display_as: :number_to_percentage))
 
-    expected_result = "<input class=\"pip-input\" data-struct=\"Elixir.PhxInPlaceTest.SandboxProduct\" id=\"1855\" name=\"markup\" value=\"13.43%\"></input>"
+    expected_result = "<input class=\"pip-input\" hash=\"fAket0kn\" name=\"markup\" value=\"13.43%\"></input>"
 
-    # assert String.contains?(query_result, "<input>")
     assert query_result == expected_result
   end
 
   test "formats data correctly when display_as set to number_to_delimited" do
     query_result = Phoenix.HTML.safe_to_string(PhxInPlace.phx_in_place(%SandboxProduct{}, :input_quote, display_as: :number_to_delimited))
 
-    expected_result = "<input class=\"pip-input\" data-struct=\"Elixir.PhxInPlaceTest.SandboxProduct\" id=\"1855\" name=\"input_quote\" value=\"223.45\"></input>"
+    expected_result = "<input class=\"pip-input\" hash=\"fAket0kn\" name=\"input_quote\" value=\"223.45\"></input>"
 
-    # assert String.contains?(query_result, "<input>")
     assert query_result == expected_result
   end
 
   test "phoenix_in_place_if generates a valid phx_in_place tag when condition is true" do
     query_result = Phoenix.HTML.safe_to_string(PhxInPlace.phx_in_place_if(true, %SandboxProduct{}, :input_quote))
-    expected_result = "<input class=\"pip-input\" data-struct=\"Elixir.PhxInPlaceTest.SandboxProduct\" id=\"1855\" name=\"input_quote\" value=\"223.45\"></input>"
+    expected_result = "<input class=\"pip-input\" hash=\"fAket0kn\" name=\"input_quote\" value=\"223.45\"></input>"
 
     assert query_result == expected_result
   end

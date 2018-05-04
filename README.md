@@ -1,110 +1,157 @@
 # PhxInPlace
 
-**Inline Editing package for Elixir and the Phoenix Framework based on the rails gem best_in_place.**
+**Inline editing package for the Phoenix Framework based on the rails gem best_in_place.**
 
-##Description
+Based on the Rails gem [best_in_place](https://github.com/bernat/best_in_place), phx_in_place enables unobtrusive, inline editing via Phoenix channels. The package consists of a view helper, javascript event listeners and a server side channel helper method that when set up will automatically update your application database and views whenever a user changes a field value.
 
-Based on the idea behind the rails gem best_in_place, phx_in_place enables unobtrusive, inline editing using Phoenix channels for updates instead of ajax calls.
+Basic Example:
+```javascript
+<%= phx_in_place @product, :name %>
+//<input class="pip-input" hash="<<hashed value here>>" name="name" value="251.00" style="background: initial;">
+```
 
-The package consists of three parts:
+Optional parameters provide support for styling and formatting:
+```javascript
+<%= phx_in_place @product, :name, class="input-lg", display_as: :number_to_currency, display_options: [precision: 2, unit: "$"], type: "textarea" %>
+//<textarea class="pip-input input_lg" display_type="number_to_currency" hash="<<hashed value here>>" name="name" value="$ 251.00" style="background: initial;">
+```
 
-1. A view helper that creates an html text_input field with the attributes necessary to support automatic updating of the data base.
+Full documentation for the package is available [here](link to come when ready).
 
-2. Channel helpers  that simplify the set up a channel to work work with the view helpers and process updates to the database when the user updates a phx_in_place field on the client side.
+A demo of the solution in action is available [here](add url where ready)
 
-3. Client side javascript to enable communication with the channel on the server side
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `phx_in_place` to your list of dependencies in `mix.exs`:
+Adding phx_in_place to an existing application with one or more channels already set up is easy and straight forward. If you are unsure how to set up a Phoenix Channel, please see the [Phoenix Channels guide](https://hexdocs.pm/phoenix/channels.html#content) for more information.
+
+Include [phx_in_place](https://github.com/cjwadair/phx_in_place) as a dependency in the mix.exs file:
 
 ```elixir
 def deps do
   [
-    {:phx_in_place, "~> 0.1.0"}
+    {:phx_in_place, git: "https://github.com/cjwadair/phx_in_place",  tag: "0.1.0"}
   ]
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/phx_in_place](https://hexdocs.pm/phx_in_place).
+and run `mix deps.get`:
 
-###View Helper Set Up
+```
+  mix deps.get
+```
 
-Add the following to your appName_web.ex file to enable use of enable use of the phx_in_place view helper in all views and templates:
+### Server-side set up
+
+`import PhxInPlace` into your appName_web.ex file to make it available in all of your templates:
 
 ```elixir
+defmodule YourAppNameWeb do
+  ...
   def view do
-    #other import, use and alias statements go here
-    import PhxInPlace
+    quote do
+      #other import, use and alias statements
+      import PhxInPlace
+    end
   end
+  ...
+end
 ```
 
-Alternatively, you can add the import statement directly in the view you want to use it if you don't want to make it available across all views
-
-##Channel Set Up
-
-1. Add the following to the user_socket.ex file in the channels folder in your appName_web folder of your app:
+and `use PhxInPlace.ChannelManager` in your channels:
 
 ```elixir
-  channel "pip:*", SitelinePhoenix.PipChannel
-```
-**NOTE:** you can name your channel whatever you want.
-
-2. Create a pip_channel.ex file in channels folder with the following content:
-
-```elixir
-  defmodule SitelinePhoenix.PipChannel do
+  # in my_channel.ex
+  defmodule SitelinePhoenix.MyChannel do
     use Phoenix.Channel
     use PhxInPlace.ChannelManager
   end
 ```
 
-3. Set confiugration variables in config.exs
+then add the following to your config.exs file:
 
 ```elixir
   config :phx_in_place,
-  repo: YourAppName.RepoName
+    repo: AppName.RepoName,
+    endpoint: AppNameWeb.Endpoint
 ```
 
-4. Add to app.js or appropriate file in your assets/js folder
+### Client-side set up
+
+`import phx_in_place` into your app.js after your import for your socket.js file:
 
 ```javascript
+  import "phoenix_html"
+  import socket from './socket'
   import * as pip from "phx_in_place"
-
-    (function(){
-
-    //join the pip channel
-    pip.join_channel();
-
-    // Listen for updates on the pip channel.
-    document.addEventListener('pip:update', function (e) {
-        // push_row_update(e.target, 'pricing_row');
-    }, false);
-
-  })();
 ```
 
-##Examples
+and add the phx_in_place event listeners to your pages:
 
-**Creating a View Helper**
+```javascript
+  channel.join()
+    .receive("ok", message => {
+      pip.addListeners(channel);
+    })
+    .receive("error", resp => {
+      console.warn("Unable to join", resp)
+    });
+```
+
+## Usage
+
+### phx_in_place (phx_in_place struct(), :field, options)
+
+View helper for generating input fields for inline editing:
 
 ```elixir
-alias PhxInPlace.phx_in_place
-
-<%= phx_in_place @product, :price %>
-<%= phx_in_place @product, :price, classes: "custom-input lg-input" %>
+ <%= phx_in_place @product, :name %>
+ #<input class="pip-input" hash="SFMyNTY.g3QAAAACZAAEZGF0YWwAAAABaAJkACpFbGl4aXIuU2l0ZWxpbmVQaG9lbml4LlN1cHBsaWVycy5CY2xpc3RpbmdiAAAHTmpkAAZzaWduZWRuBgAvG0InYwE.aJPlnBRX1nuKx8Bdyo8P_UTpRYIyO24aQaYknQJ2Q50" name="name" value="251.00" style="background: initial;">
 ```
 
-##Params:
+Hash value contains the name of the struct and the id of the record in question. Values are signed using Phoenix.Token to prevent tampering but are not encrypted. See the [Phoenix.Token](https://hexdocs.pm/phoenix/Phoenix.Token.html#content) module for details.
 
-- **Struct**(mandatory): The Ecto query struct containing the data to be displayed and managed
-- **field**(mandatory): The name of the field to be displayed and managed
+**Params:**
 
-##Options:
+ - **struct (required)**: The Ecto query struct containing the data to be displayed and managed
+ - **field (required)** : The name of the field to be displayed passed as an atom
 
-- **:classes** - A string containing a list of any classes to be applied to the input field
-- **:field_type** - The type of input field to be created. Default is text_input. Currently there are no other options available but select and other input fields will be added in future updates
-- **:display_as** - Name of the formatting method to be applied to returned data (ie - :number_to_currency). Not implemented.
+**Options**
+
+- **type (string)**: The name of the input type you want to create. Default to type="input".
+- **class (string)**: A string containing the names of any additional classes to be added to the element being created.
+- **display_as (atom)**: The name of the formatting helper to apply to the output value passed as an atom. Supported options include **:number_to_currency, :number_to_percentage, and :number_to_delimited**. See the [Number]() Hex Package for more details.
+- **display_options (list)**: option values for the display_as field. See the Number Hex package for more details. Basic defaults have been set in the phx_in_place config.exs file and can be overridden in your apps config.exs file if required.
+
+
+---
+### phx_in_place_if (phx_in_place_if condition, struct, field, OPTIONS)
+
+Similar to the phx_in_place helper but with a condition as the first parameter.
+
+```elixir
+  <%= phx_in_place_if @user.type=='admin', @product, :supplier_id %>
+```
+
+if `@user.type=='admin'` is false, a non-editable `<span></span>` tag is generated. Otherwise, the output is the same as the phx_in_place method above. This is useful for enforcing authorization rules.
+
+---
+### Post Update Callbacks
+
+The event handlers that phx_in_place adds to your code will handle database updates and change the value of the input field automatically. For additional post-update event handling, you can listen to the `pip:update:success` and `pip:update_failure` events as follows:
+
+```javascript
+  document.addEventListener('pip:update:success', function (e) {
+      //add your success event callbacks here
+  }, false);
+
+  document.addEventListener('pip:update:failure', function (e) {
+      //add your failure event callbacks here
+  }, false);
+```
+
+These callbacks can be used to trigger additional client side javascript updates or channel events for server side processing.
+
+## Examples
+
+Coming Soon...

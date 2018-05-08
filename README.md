@@ -62,7 +62,7 @@ and `use PhxInPlace.ChannelManager` in your channels:
 
 ```elixir
   # in my_channel.ex
-  defmodule SitelinePhoenix.MyChannel do
+  defmodule AppName.MyChannel do
     use Phoenix.Channel
     use PhxInPlace.ChannelManager
   end
@@ -124,7 +124,6 @@ Hash value contains the name of the struct and the id of the record in question.
 - **display_options (list)**: option values for the display_as field. See the Number Hex package for more details. Basic defaults have been set in the phx_in_place config.exs file and can be overridden in your apps config.exs file if required.
 
 
----
 ### phx_in_place_if (phx_in_place_if condition, struct, field, OPTIONS)
 
 Similar to the phx_in_place helper but with a condition as the first parameter.
@@ -135,7 +134,6 @@ Similar to the phx_in_place helper but with a condition as the first parameter.
 
 if `@user.type=='admin'` is false, a non-editable `<span></span>` tag is generated. Otherwise, the output is the same as the phx_in_place method above. This is useful for enforcing authorization rules.
 
----
 ### Post Update Callbacks
 
 The event handlers that phx_in_place adds to your code will handle database updates and change the value of the input field automatically. For additional post-update event handling, you can listen to the `pip:update:success` and `pip:update_failure` events as follows:

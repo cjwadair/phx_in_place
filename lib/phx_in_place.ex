@@ -1,28 +1,42 @@
 defmodule PhxInPlace do
 
   @moduledoc """
-    Module for creating inline editable fields that make use of Phoenix.Channels to
-    automatically update to the database when values are changed.
+    The PhxInPlace module provides helper functions for generating inline editable fields that make use of Phoenix.Channels to automatically update to the database when values are changed.
   """
 
   # Number provides convenience methods for formatting number values
   import Number.{Currency, Percentage, Delimit}
 
   @doc """
-    Helper method to generate a custom input tag using the phx_in_place helper method.
+    Generate a custom input tag that supports inline editing via phoenix channels.
 
-    The resulting html is configured with the attributes phx_in_place needs to handle the updates automatically.
+    ## Examples
+        <%= phx_in_place @product, :category %>
 
-    example:
-      <%= PhxInPlace.phx_in_place @product, :name, class: "test-class" %>
-      <input class="pip-input test-class" data-struct="Elixir.SitelinePhoenix.Suppliers.Product" id="1855" name="name" value="Test 1-53" style="background: initial;">
 
-    options:
-      classes: [] - takes a list of custom classes to add to the element
-      type: :type - to come. support for form types other than text_input
-      display_as: :atom - to come - will support custom formatting of the input field value (eg - number_to_currency, etc)
+    generate the following output:
+
+    ```
+    <input class="pip-input" hash="<<hashed value here>>" name="category" value="251.00" style="background: initial;">
+    ```
+
+    The hashed value is a signed token genered using the Phoenix.Token module. As such it is signed so it can be validated but not encrypted.
+
+    Parameters:
+
+    - source (struct) - The record to be displayed and edited
+    - field (atom) - The name of the field to be edited
+
+    Options:
+
+    - classes: [] - takes a list of custom classes to add to the element
+    - type: :type - to come. support for form types other than text_input
+    - display_as: :atom - to come - will support custom formatting of the input
+    - field value (eg - number_to_currency, etc)
+
   """
   def phx_in_place(source, field, opts \\ [])
+  # def phx_in_place(struct, atom, opts \\ [])
   def phx_in_place(source, _field, _opts) when is_nil(source) or not is_map(source), do: {:error, "Invalid or Missing Data Source"}
   def phx_in_place(_source, field, _opts) when is_nil(field), do: {:error, "Missing Field Name"}
 
@@ -57,16 +71,23 @@ defmodule PhxInPlace do
 
   @doc """
     Similar to phx_in_place/3 method but adds an if condition as the first parameters.
+
     Generates a phx_in_place content tag if condition is true or a non-editable span tag if false. Useful for handling authorization and user permissions.
 
     Example
+    ```
     <%= PhxInPlace.phx_in_place_if condition, @product, :name, class: "test-class" %>
+    ```
 
     if condition is true, returns:
+    ```
     <input class="pip-input test-class" data-struct="Elixir.SitelinePhoenix.Suppliers.Product" id="1855" name="name" value="Test 1-53" style="background: initial;">
+    ```
 
     if condition is false, returns:
+    ```
     <span class="pip-input test-class" value="value">value</span
+    ```
   """
   def phx_in_place_if(condition, source, field, opts \\ []) do
     case condition do
@@ -74,15 +95,6 @@ defmodule PhxInPlace do
       false -> generate_regular_tag(source, field, opts)
     end
   end
-
-  # TODO: Need to fix this method to properly evaluate any conditions provided...
-  # defp test_condition(condition) do
-  #   case condition do
-  #     true -> true
-  #     false -> false
-  #   end
-  #   # some code here to test the condition that was provided....
-  # end
 
   defp generate_regular_tag(source, field, opts) do
     with {:ok, value} <- set_value(source, field, nil, nil),
@@ -126,17 +138,9 @@ defmodule PhxInPlace do
     end
   end
 
-  # TODO: Handle case where submitted display type is not an atom?
-  defp set_display_type(format) do
-    {:ok, Atom.to_string(format)}
-  end
-  defp set_display_type(_format), do: {:ok, nil}
-  defp get_from_source(source, field) do
-    case Map.fetch(source, field) do
-      {:ok, result} -> {:ok, result}
-      _ -> {:error, "#{inspect field} not found in the source data provided"}
-    end
-  end
+  defp set_display_type(format) when format == "nil" or is_nil(format), do: {:ok, nil}
+  defp set_display_type(format) when is_atom(format), do: {:ok, Atom.to_string(format)}
+  defp set_display_type(format), do: {:ok, format}
 
   defp hash_value(hash, _) when hash == nil, do: {:ok, "not found"}
   defp hash_value(struct, id) do
@@ -147,7 +151,7 @@ defmodule PhxInPlace do
 
   defp set_classes(classes) when classes == nil, do: {:ok, "pip-input"}
   defp set_classes(classes), do: {:ok, "pip-input " <> classes}
-  defp set_classes(classes),  do: {:ok, "pip-input " <> classes}
+
   defp set_attrs(map) do
     map
     |> Map.take([:class, :name, :value, :hash, :display_type])

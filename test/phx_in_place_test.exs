@@ -67,7 +67,7 @@ defmodule PhxInPlaceTest do
   test "formats data correctly when display_as set to number_to_currency" do
     query_result = Phoenix.HTML.safe_to_string(PhxInPlace.phx_in_place(%SandboxProduct{}, :input_quote, display_as: :number_to_currency))
 
-    expected_result = "<input class=\"pip-input\" hash=\"fAket0kn\" name=\"input_quote\" value=\"$ 223.45\"></input>"
+    expected_result = "<input class=\"pip-input\" display-type=\"number_to_currency\" hash=\"fAket0kn\" name=\"input_quote\" value=\"$ 223.45\"></input>"
 
     assert query_result == expected_result
   end
@@ -75,7 +75,7 @@ defmodule PhxInPlaceTest do
   test "display_as formatted correctly when helper options provided" do
     query_result = Phoenix.HTML.safe_to_string(PhxInPlace.phx_in_place(%SandboxProduct{}, :input_quote, display_as: :number_to_currency, display_options: [precision: 5, unit: "£"]))
 
-    expected_result = "<input class=\"pip-input\" hash=\"fAket0kn\" name=\"input_quote\" value=\"£ 223.45000\"></input>"
+    expected_result = "<input class=\"pip-input\" display-type=\"number_to_currency\" hash=\"fAket0kn\" name=\"input_quote\" value=\"£ 223.45000\"></input>"
 
     assert query_result == expected_result
   end
@@ -83,7 +83,7 @@ defmodule PhxInPlaceTest do
   test "formats data correctly when display_as set to number_to_percentage" do
     query_result = Phoenix.HTML.safe_to_string(PhxInPlace.phx_in_place(%SandboxProduct{}, :markup, display_as: :number_to_percentage))
 
-    expected_result = "<input class=\"pip-input\" hash=\"fAket0kn\" name=\"markup\" value=\"13.43%\"></input>"
+    expected_result = "<input class=\"pip-input\" display-type=\"number_to_percentage\" hash=\"fAket0kn\" name=\"markup\" value=\"13.43%\"></input>"
 
     assert query_result == expected_result
   end
@@ -91,21 +91,7 @@ defmodule PhxInPlaceTest do
   test "formats data correctly when display_as set to number_to_delimited" do
     query_result = Phoenix.HTML.safe_to_string(PhxInPlace.phx_in_place(%SandboxProduct{}, :input_quote, display_as: :number_to_delimited))
 
-    expected_result = "<input class=\"pip-input\" hash=\"fAket0kn\" name=\"input_quote\" value=\"223.45\"></input>"
-
-    assert query_result == expected_result
-  end
-
-  test "phoenix_in_place_if generates a valid phx_in_place tag when condition is true" do
-    query_result = Phoenix.HTML.safe_to_string(PhxInPlace.phx_in_place_if(true, %SandboxProduct{}, :input_quote))
-    expected_result = "<input class=\"pip-input\" hash=\"fAket0kn\" name=\"input_quote\" value=\"223.45\"></input>"
-
-    assert query_result == expected_result
-  end
-
-  test "phoenix_in_place_if generates an error when condition is false" do
-    query_result = Phoenix.HTML.safe_to_string(PhxInPlace.phx_in_place_if(false, %SandboxProduct{}, :input_quote))
-    expected_result = "<span class=\"pip-input\">223.45</span>"
+    expected_result = "<input class=\"pip-input\" display-type=\"number_to_delimited\" hash=\"fAket0kn\" name=\"input_quote\" value=\"223.45\"></input>"
 
     assert query_result == expected_result
   end

@@ -4,25 +4,26 @@ defmodule PhxInPlace.Mixfile do
   def project do
     [
       app: :phx_in_place,
-      version: "0.1.3",
+      version: "0.1.0",
       elixir: "~> 1.5",
       start_permanent: Mix.env == :prod,
       description: description(),
       deps: deps(),
-      package: package()
+      package: package(),
+      docs: docs()
     ]
   end
 
   # Run "mix help compile.app" to learn about applications.
   def application do
     [extra_applications: [:logger],
-    env: [tokenHandler: Phoenix.Token]]
+    env: [tokenHandler: Phoenix.Token, updateHandler: UpdateHandler]]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ex_doc, "~> 0.16", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.18", only: :dev, runtime: false},
       {:phoenix_ecto, "~> 3.2", only: :test},
       {:phoenix_html, "~> 2.10", only: :test},
       {:number, "~> 0.5.5"}
@@ -42,6 +43,14 @@ defmodule PhxInPlace.Mixfile do
       maintainers: ["Chris Adair"],
       licenses: ["MIT"],
       links: %{github: "https://github.com/cjwadair/phx_in_place"}
+    ]
+  end
+
+  defp docs do
+    [
+      source_url: "https://github.com/cjwadair/phx_in_place",
+      main: "PhxInPlace",
+      extras: ["README.md"]
     ]
   end
 end

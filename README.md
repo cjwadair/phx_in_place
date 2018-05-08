@@ -157,7 +157,7 @@ These callbacks can be used to trigger additional client side javascript updates
 The display_as option works with the formatting options provided through the Numbers Hex package. `:number_to_currency`, `:number_to_percentage`, and `:number_to_delimited` are currently supported.
 
 ```
-  <%= phx_in_place @product, :name, class="input-lg", display_as: :number_to_currency, display_options: [precision: 2, unit: "$"] %>
+  <%= phx_in_place @product, :name, class="input-lg", display_as: :number_to_currency %>
 ```
 
 Application wide defaults for Number formatting can be set in your config.exs file. See [Number documentation](https://hexdocs.pm/number/Number.html) for details on configuration options.

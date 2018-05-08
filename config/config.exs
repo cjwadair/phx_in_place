@@ -8,9 +8,6 @@ config :number,
                   precision: 2,
                   format: "%u %n",           # "$30.00"
                   negative_format: "(%u %n)" # "($30.00)"
-                ],
-      percentage: [
-                  precision: 2
                 ]
 
 # This configuration is loaded before any dependency and is restricted

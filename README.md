@@ -6,8 +6,8 @@ Based on the Rails gem [best_in_place](https://github.com/bernat/best_in_place),
 
 Basic Example:
 ```javascript
-<%= phx_in_place @product, :name %>
-//<input class="pip-input" hash="<<hashed value here>>" name="name" value="251.00" style="background: initial;">
+<%= phx_in_place @product, :category %>
+//<input class="pip-input" hash="<<hashed value here>>" name="category" value="251.00" style="background: initial;">
 ```
 
 Optional parameters provide support for styling and formatting:
@@ -16,9 +16,9 @@ Optional parameters provide support for styling and formatting:
 //<textarea class="pip-input input_lg" display_type="number_to_currency" hash="<<hashed value here>>" name="name" value="$ 251.00" style="background: initial;">
 ```
 
-Full documentation for the package is available [here](link to come when ready).
+<!-- Full documentation for the package is available [here](link to come when ready). -->
 
-A demo of the solution in action is available [here](add url where ready)
+<!-- A demo of the solution in action is available [here](add url where ready) -->
 
 
 ## Installation
@@ -30,7 +30,7 @@ Include [phx_in_place](https://github.com/cjwadair/phx_in_place) as a dependency
 ```elixir
 def deps do
   [
-    {:phx_in_place, git: "https://github.com/cjwadair/phx_in_place",  tag: "0.1.0"}
+    {:phx_in_place, "0.1.0"}
   ]
 end
 ```
@@ -152,4 +152,18 @@ These callbacks can be used to trigger additional client side javascript updates
 
 ## Examples
 
-Coming Soon...
+### Display_as
+
+The display_as option works with the formatting options provided through the Numbers Hex package. `:number_to_currency`, `:number_to_percentage`, and `:number_to_delimited` are currently supported.
+
+```
+  <%= phx_in_place @product, :name, class="input-lg", display_as: :number_to_currency, display_options: [precision: 2, unit: "$"] %>
+```
+
+Application wide defaults for Number formatting can be set in your config.exs file. See [Number documentation](https://hexdocs.pm/number/Number.html) for details on configuration options.
+
+To override the defaults on a case by case basis, display_options: can be set directly within the phx_in_place tag:  
+
+```
+  <%= phx_in_place @product, :name, class="input-lg", display_as: :number_to_currency, display_options: [precision: 2, unit: "$"] %>
+```

@@ -46,28 +46,4 @@ defmodule ChannelManagerTest do
     expected = {:ok, "72.45"}
     assert result == expected
   end
-
-
-
-  # DONT NEED? correct result is assumed if handle in ultimately returns correctly
-  # test "returns OK tuple when valid token provided" do
-  #   repo = Application.get_env(:phx_in_place, :repo)
-  #   payload = %{"changes" => %{"input_quote" => "72.45"}, "record_type" => nil, "hash" => "valid_token"}
-  #   result = PhxInPlace.ChannelManager.verify_and_update(repo, payload)
-  #   assert {:ok, _} = #should ultimately return the update successful information
-  # end
-
-  # test "returns error if no attrs are provided in the payload" do
-  #   assert {:error, _} = 2
-  # end
-
-  # test "processes correctly when value in payload is formatted" do
-  #
-  # end
-  #
-  # test "processes correctly when value in playload is not formatted" do
-  #
-  # end
-
-
 end

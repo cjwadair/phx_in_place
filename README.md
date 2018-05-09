@@ -35,10 +35,16 @@ def deps do
 end
 ```
 
-and run `mix deps.get`:
+and run `mix deps.get` to install dependencies:
 
 ```
   mix deps.get
+```
+
+and `npm install` to install the client side files:
+
+```
+npm install
 ```
 
 ### Server-side set up

@@ -4,7 +4,7 @@ defmodule PhxInPlace.Mixfile do
   def project do
     [
       app: :phx_in_place,
-      version: "0.1.0",
+      version: "0.1.1",
       elixir: "~> 1.5",
       start_permanent: Mix.env == :prod,
       description: description(),
@@ -27,8 +27,6 @@ defmodule PhxInPlace.Mixfile do
       {:phoenix_ecto, "~> 3.2", only: :test},
       {:phoenix_html, "~> 2.10", only: :test},
       {:number, "~> 0.5.5"}
-      # {:dep_from_hexpm, "~> 0.3.0"},
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
     ]
   end
 
@@ -42,7 +40,8 @@ defmodule PhxInPlace.Mixfile do
     [
       maintainers: ["Chris Adair"],
       licenses: ["MIT"],
-      links: %{github: "https://github.com/cjwadair/phx_in_place"}
+      links: %{github: "https://github.com/cjwadair/phx_in_place"},
+      files: ~w(lib priv CHANGELOG.md LICENSE mix.exs package.json README.md)
     ]
   end
 

@@ -41,7 +41,16 @@ and run `mix deps.get` to install dependencies:
   mix deps.get
 ```
 
-and `npm install` to install the client side files:
+then add the following to your package.json file:
+
+```
+"dependencies": {
+    ...
+    "phx_in_place": "file:../deps/phx_in_place"
+  },
+```
+
+and run `npm install` from the same directory that your package.json file is located in (normally the /assets folder):
 
 ```
 npm install

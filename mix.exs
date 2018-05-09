@@ -10,7 +10,8 @@ defmodule PhxInPlace.Mixfile do
       description: description(),
       deps: deps(),
       package: package(),
-      docs: docs()
+      docs: docs(),
+      elixirc_paths: ["lib", "test/support"],
     ]
   end
 

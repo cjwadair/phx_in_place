@@ -22,7 +22,7 @@ defmodule PhxInPlaceTest do
   test "input tag generated when allowable tag type provided" do
     query_result = Phoenix.HTML.safe_to_string(PhxInPlace.phx_in_place(%SandboxProduct{}, :name, type: :textarea))
 
-    expected_result = "<textarea class=\"pip-input\" hash=\"fAket0kn\" name=\"name\" value=\"Test 1-54\"></textarea>"
+    expected_result = "<textarea class=\"pip-input\" hash=\"fAket0kn\" name=\"name\" value=\"Test 1-54\">Test 1-54</textarea>"
 
     assert query_result == expected_result
   end
@@ -92,6 +92,13 @@ defmodule PhxInPlaceTest do
     query_result = Phoenix.HTML.safe_to_string(PhxInPlace.phx_in_place(%SandboxProduct{}, :input_quote, display_as: :number_to_delimited))
 
     expected_result = "<input class=\"pip-input\" display-type=\"number_to_delimited\" hash=\"fAket0kn\" name=\"input_quote\" value=\"223.45\"></input>"
+
+    assert query_result == expected_result
+  end
+
+  test "generates a size attribute on tag when a size option is provided" do
+    query_result = Phoenix.HTML.safe_to_string(PhxInPlace.phx_in_place(%SandboxProduct{}, :input_quote, size: "10"))
+    expected_result = "<input class=\"pip-input\" hash=\"fAket0kn\" name=\"input_quote\" size=\"10\" value=\"223.45\"></input>"
 
     assert query_result == expected_result
   end

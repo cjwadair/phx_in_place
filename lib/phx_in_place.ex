@@ -55,14 +55,14 @@ defmodule PhxInPlace do
         {:ok, value} <- set_value(source, field, opts[:display_as], opts[:display_options]),
         {:ok, hash} <- hash_value(source.__struct__, source.id),
         {:ok, class} <- set_classes(opts[:class]),
-        {:ok, display_type} <- set_display_type(opts[:display_as])
+        {:ok, display_type} <- set_display_type(opts[:display_as]),
+        {:ok, size} <- set_size(opts[:size])
       do
-        map = if is_nil(display_type) do
-          %{type: type, value: value, class: class, name: field_name, hash: hash}
-        else
-          %{type: type, value: value, class: class, name: field_name, hash: hash, display_type: display_type}
-        end
-        Phoenix.HTML.Tag.content_tag(map[:type], "", set_attrs(map))
+
+        map = %{type: type, value: value, class: class, name: field_name, hash: hash, display_type: display_type, size: size}
+
+        generate_tag(map)
+
       else
         {:error, error} -> {:error, error}
       end
@@ -93,6 +93,14 @@ defmodule PhxInPlace do
     case condition do
       true -> phx_in_place(source, field, opts)
       false -> generate_regular_tag(source, field, opts)
+    end
+  end
+
+  defp generate_tag(map) do
+    case map[:type] do
+      :input -> Phoenix.HTML.Tag.content_tag(map[:type], "", set_attrs(map))
+      :textarea -> Phoenix.HTML.Tag.content_tag(map[:type], map[:value], set_attrs(map))
+      true -> Phoenix.HTML.Tag.content_tag(map[:type], "", set_attrs(map))
     end
   end
 
@@ -152,9 +160,12 @@ defmodule PhxInPlace do
   defp set_classes(classes) when classes == nil, do: {:ok, "pip-input"}
   defp set_classes(classes), do: {:ok, "pip-input " <> classes}
 
+  defp set_size(size) when size == nil, do: {:ok, nil}
+  defp set_size(size), do: {:ok, size}
+
   defp set_attrs(map) do
     map
-    |> Map.take([:class, :name, :value, :hash, :display_type])
+    |> Map.take([:class, :name, :value, :hash, :display_type, :size])
     |> Map.to_list()
   end
 

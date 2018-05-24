@@ -13,8 +13,9 @@ Basic Example:
 Optional parameters provide support for styling and formatting:
 ```javascript
 <%= phx_in_place @product, :name, class="input-lg", display_as: :number_to_currency, display_options: [precision: 2, unit: "$"], type: "textarea" %>
+```
 
-** For a full demo of PhxInPlace in action, (click here)[https://phx-in-place-demo.herokuapp.com/] **
+**For a full demo of PhxInPlace in action, [click here](https://phx-in-place-demo.herokuapp.com/)**
 
 
 ## Installation

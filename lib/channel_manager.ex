@@ -1,6 +1,6 @@
 defmodule PhxInPlace.ChannelManager do
   @moduledoc false
-  
+
   import Number.{Currency, Percentage, Delimit}
 
   defmacro __using__(params) do
@@ -25,11 +25,20 @@ defmodule PhxInPlace.ChannelManager do
       def handle_in("pip_update", payload, socket) do
         case verify_and_update(@repo, payload) do
           {:ok, result} ->
+            push socket, "pip:update:success", %{msg: "update successful", value: result}
+            # {:noreply, socket}
             {:reply, {:ok, %{msg: "update successful", value: result}}, socket}
           {:error, msg} ->
-            {:reply, {:error, %{msg: msg}}, socket}
+            newMsg = msg
+              |> Enum.map(fn {k,v} -> Atom.to_string(k) <> " " <> Enum.at(v,0) end)
+              |> Enum.at(0)
+            push socket, "pip:update:error", %{ msg: newMsg }
+            # response = MyApp.ChangesetView.render("errors.json", %{changeset: changeset})
+            {:reply, {:error, %{msg: newMsg }}, socket}
+            # {:noreply, socket}
         end
       end
+
     end
   end
 

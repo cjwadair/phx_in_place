@@ -22,16 +22,15 @@ export function addListeners(channel, page=document) {
         // Triggers update event on channel passing in values to the PIP Channel Manager
         channel.push('pip_update', update_values)
         .receive("ok", resp => {
-          console.log('received from pip_update', resp["message"], resp["value"], e.target);
+          console.log('phx_in_place: update successful: ', resp, update_values);
 
-          e.target.value = resp['value'];
+          // channel.push("pip:success", {target: e.target, msg: "update successful"});
 
-          // Responds with pip:update:success event when update is successful
           // TODO: Could this be done as a channel event instead?
           e.target.dispatchEvent(updateSuccess);
         })
         .receive("error", msg => {
-          console.error("phx_in_place: error updating field: ", msg)
+          console.error("phx_in_place: update error: ", msg)
           // Responds with pip:update:event when update fails
           e.target.dispatchEvent(updateError);
         });

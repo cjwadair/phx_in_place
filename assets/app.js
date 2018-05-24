@@ -16,7 +16,8 @@ export function addListeners(channel, page=document) {
           "changes": {[e.target.name]: e.target.value},
           "id": e.target.id,
           "hash": e.target.getAttribute("hash"),
-          "formatting": e.target.getAttribute("display-type") || null
+          "formatting": e.target.getAttribute("display-type") || null,
+          "display_options": e.target.getAttribute("display-options") || null
         };
 
         // Triggers update event on channel passing in values to the PIP Channel Manager

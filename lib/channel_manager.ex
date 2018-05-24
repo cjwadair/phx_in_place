@@ -52,7 +52,7 @@ defmodule PhxInPlace.ChannelManager do
       {:ok, changes} <- cleanChangeValues(payload["changes"], payload["formatting"]),
       {:ok, resp} <- do_update(repo, token_values, changes)
     do
-      process_result(resp, changes, payload["formatting"])
+      process_result(resp, changes, payload["formatting"], payload["display_options"])
     else
       {:error, msg} -> {:error, msg}
     end
@@ -101,19 +101,19 @@ defmodule PhxInPlace.ChannelManager do
   end
 
   # inserts the updated value into the changes pair so that it can be passed back to the client for updating
-  defp process_result(resp, attrs, format) do
+  defp process_result(resp, attrs, format, options) do
     {field, value} = attrs |> Enum.at(0)
     resp
     |> Map.get(field)
-    |> format_value(format) #get back {:ok, foramtted_value} pair
+    |> format_value(format, options) #get back {:ok, foramtted_value} pair
   end
 
   # TODO: This is copied from phx_in_place - move to helper and share code?
-  defp format_value(value, format) do
+  defp format_value(value, format, options) do
 
     #handles case where nil value passed through for options
-    # options = if is_nil(options), do: [], else: options
-    options = []
+    options = if is_nil(options), do: [], else: options
+    # options = []
 
     case format do
       "number_to_currency" -> {:ok, number_to_currency(value, options)}

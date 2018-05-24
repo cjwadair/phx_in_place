@@ -26,10 +26,24 @@ defmodule ChannelManagerTest do
     assert {:error, "invalid attrs tuple received in cleanChangeValues"} = result
   end
 
-  test "returns formatted value when formatting is specified" do
+  test "returns correctly formatted value when formatting for number_to_currency is specified" do
     payload = %{"id" => @valid_id, "changes" => %{"input_quote" => "72.45"}, "hash" => @valid_hash, "record_type" => nil, "formatting" => "number_to_currency"}
     result = PhxInPlace.ChannelManager.verify_and_update(@repo, payload)
     expected = {:ok, "$ 72.45"}
+    assert result == expected
+  end
+
+  test "returns correctly formatted value when formatting for number_to_percentage is specified" do
+    payload = %{"id" => @valid_id, "changes" => %{"input_quote" => "72.45666"}, "hash" => @valid_hash, "record_type" => nil, "formatting" => "number_to_currency", "display_options" => [precision: 3, unit: "£"]}
+    result = PhxInPlace.ChannelManager.verify_and_update(@repo, payload)
+    expected = {:ok, "£ 72.457"}
+    assert result == expected
+  end
+
+  test "applies formatting options correctly" do
+    payload = %{"id" => @valid_id, "changes" => %{"input_quote" => "72.45"}, "hash" => @valid_hash, "record_type" => nil, "formatting" => "number_to_percentage", }
+    result = PhxInPlace.ChannelManager.verify_and_update(@repo, payload)
+    expected = {:ok, "72.45%"}
     assert result == expected
   end
 

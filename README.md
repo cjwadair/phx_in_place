@@ -146,7 +146,7 @@ Similar to the phx_in_place helper but with a condition as the first parameter.
 
 if `@user.type=='admin'` is false, a non-editable `<span></span>` tag is generated. Otherwise, the output is the same as the phx_in_place method above. This is useful for enforcing authorization rules.
 
-### Post Update Callbacks
+## Post Update Callbacks
 
 The event handlers that phx_in_place adds to your code will handle database updates and change the value of the input field automatically. For additional post-update event handling, you can listen to the `pip:update:success` and `pip:update:error` events as follows:
 

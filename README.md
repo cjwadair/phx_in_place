@@ -30,7 +30,7 @@ Include [phx_in_place](https://github.com/cjwadair/phx_in_place) as a dependency
 ```elixir
 def deps do
   [
-    {:phx_in_place, "0.1.1"}
+    {:phx_in_place, "0.1.2"}
   ]
 end
 ```
@@ -151,14 +151,14 @@ if `@user.type=='admin'` is false, a non-editable `<span></span>` tag is generat
 
 ### Post Update Callbacks
 
-The event handlers that phx_in_place adds to your code will handle database updates and change the value of the input field automatically. For additional post-update event handling, you can listen to the `pip:update:success` and `pip:update_failure` events as follows:
+The event handlers that phx_in_place adds to your code will handle database updates and change the value of the input field automatically. For additional post-update event handling, you can listen to the `pip:update:success` and `pip:update:error` events as follows:
 
 ```javascript
   document.addEventListener('pip:update:success', function (e) {
       //add your success event callbacks here
   }, false);
 
-  document.addEventListener('pip:update:failure', function (e) {
+  document.addEventListener('pip:update:error', function (e) {
       //add your failure event callbacks here
   }, false);
 ```

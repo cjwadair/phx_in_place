@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.3 (2018-05-24)
+
+* Bug fixes
+  * fixed bug when handling invalid data during update process
+
 ## v0.1.1 (2018-05-09)
 
 * Enhancements

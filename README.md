@@ -30,7 +30,7 @@ Include [phx_in_place](https://github.com/cjwadair/phx_in_place) as a dependency
 ```elixir
 def deps do
   [
-    {:phx_in_place, "0.1.2"}
+    {:phx_in_place, "0.1.3"}
   ]
 end
 ```

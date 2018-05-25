@@ -134,6 +134,7 @@ Hash value contains the name of the struct and the id of the record in question.
 - **class (string)**: A string containing the names of any additional classes to be added to the element being created.
 - **display_as (atom)**: The name of the formatting helper to apply to the output value passed as an atom. Supported options include **:number_to_currency, :number_to_percentage, and :number_to_delimited**. See the [Number]() Hex Package for more details.
 - **display_options (list)**: option values for the display_as field. See the Number Hex package for more details. Basic defaults have been set in the phx_in_place config.exs file and can be overridden in your apps config.exs file if required.
+- **size (string)**: adds a size attribute to the input tag.
 
 
 ### phx_in_place_if (phx_in_place_if condition, struct, field, OPTIONS)

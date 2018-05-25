@@ -27,9 +27,9 @@ defmodule ChannelManagerTest do
   end
 
   test "returns correctly formatted value when formatting for number_to_currency is specified" do
-    payload = %{"id" => @valid_id, "changes" => %{"input_quote" => "72.45"}, "hash" => @valid_hash, "record_type" => nil, "formatting" => "number_to_currency"}
+    payload = %{"id" => @valid_id, "changes" => %{"input_quote" => "72.4588"}, "hash" => @valid_hash, "record_type" => nil, "formatting" => "number_to_currency"}
     result = PhxInPlace.ChannelManager.verify_and_update(@repo, payload)
-    expected = {:ok, "$ 72.45"}
+    expected = {:ok, "$ 72.46"}
     assert result == expected
   end
 
